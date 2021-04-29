@@ -1,0 +1,26 @@
+{
+    "selector": "#priceblock_ourprice",
+    "products": [
+        {
+            "title": "Housse GPB Yakeda",
+            "url": "https:\/\/www.amazon.fr\/YAKEDA-Ventilateurs-tactique-Tactical-ext%C3%A9rieure\/dp\/B01MA1XQ8U",
+            "desiredPrice": 30
+        },
+        {
+            "title": "Plaque de hanche GK",
+            "url": "https:\/\/www.amazon.fr\/Gk-Pro-Plaque-Cuisse-Hanche\/dp\/B08524HS74",
+            "desiredPrice": 60,
+            "alertedPrice": 5900
+        },
+        {
+            "title": "Plaque de cuisse GK",
+            "url": "https:\/\/www.amazon.fr\/Gk-Pro-Plaque-Tactique-97005KT\/dp\/B08426MJZS",
+            "desiredPrice": 60
+        },
+        {
+            "title": "Turtle Wax Hybrid Sealant Spray",
+            "url": "https:\/\/www.amazon.fr\/Turtle-Wax-Sealant-Hydrophobe-Carnauba\/dp\/B07N6DV49P\/r",
+            "desiredPrice": 15
+        }
+    ]
+}

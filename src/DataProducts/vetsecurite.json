@@ -1,0 +1,15 @@
+{
+    "selector": "#our_price_display",
+    "products": [
+        {
+            "title": "Housse GPB Yakeda",
+            "url": "https:\/\/vetsecurite.com\/gilets-tactiques\/5860-gilet-tactique-noir-yakeda-7867494414330.html",
+            "desiredPrice": 30
+        },
+        {
+            "title": "Plaque de hanche GK",
+            "url": "https:\/\/vetsecurite.com\/plaques-de-cuisse\/9614-plaque-tactique-de-hanche-97005kt-gk-pro-3664253062757.html",
+            "desiredPrice": 60
+        }
+    ]
+}
