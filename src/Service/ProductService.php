@@ -42,10 +42,10 @@ class ProductService
             if (!$selector->count()) {
                 $this->logger->error(
                     sprintf(
-                    'Selector not found for "%s" product (%s)',
-                    $product['title'],
-                    $file->getFilename()
-                )
+                        'Selector not found for "%s" product (%s)',
+                        $product['title'],
+                        $file->getFilename()
+                    )
                 );
 
                 continue;
