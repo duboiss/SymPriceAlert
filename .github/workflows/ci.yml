@@ -1,0 +1,29 @@
+name: CI
+
+on:
+    pull_request:
+    push:
+        branches:
+            - 'master'
+
+jobs:
+    symfony:
+        name: Symfony
+        continue-on-error: false
+        runs-on: 'ubuntu-20.04'
+
+        steps:
+            - uses: actions/checkout@v2 # https://github.com/actions/checkout
+
+            - name: Install project
+              uses: php-actions/composer@v6 # https://github.com/marketplace/actions/composer-php-actions
+              with:
+                  php_version: 8.0
+                  version: 1
+                  command: make install
+
+            - name: Check the Symfony console
+              run: bin/console -V
+
+            - name: Quality tools checks
+              run: make phpcsfixer-audit
