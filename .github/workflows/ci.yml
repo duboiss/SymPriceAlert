@@ -19,8 +19,6 @@ jobs:
               uses: php-actions/composer@v6 # https://github.com/marketplace/actions/composer-php-actions
               with:
                   php_version: 8.0
-                  version: 1
-                  command: make install
 
             - name: Check the Symfony console
               run: bin/console -V
