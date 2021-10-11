@@ -40,10 +40,12 @@ class ProductService
             $selector = $crawler->filter($crawlerSelector);
 
             if (!$selector->count()) {
-                $this->logger->error(sprintf(
+                $this->logger->error(
+                    sprintf(
                     'Selector not found for "%s" product (%s)',
                     $product['title'],
-                    $file->getFilename())
+                    $file->getFilename()
+                )
                 );
 
                 continue;
