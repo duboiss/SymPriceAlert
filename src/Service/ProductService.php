@@ -10,13 +10,13 @@ use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class ProductService
 {
-    private string $filePath = '';
     private ?array $dataProducts = null;
 
     public function __construct(private HttpClientInterface $httpClient, private LoggerInterface $logger, private NotifyService $notifyService, private EventDispatcherInterface $dispatcher)
@@ -25,13 +25,15 @@ class ProductService
 
     public function analyse(SplFileInfo $file): void
     {
-        $this->filePath = $file->getRealPath();
-        $this->dataProducts = $this->getDataProducts();
-        $crawlerSelector = $this->dataProducts['selector'];
-        $products = $this->dataProducts['products'];
+        $filePath = $file->getRealPath();
 
-        foreach ($products as $index => $product) {
-            sleep(5);
+        $this->dataProducts = $this->getDataProducts($filePath);
+        $crawlerSelector = $this->dataProducts['selector'];
+
+        foreach ($this->dataProducts['products'] as $index => $product) {
+            // Avoid being blocked by the rate limiter
+            sleep(15);
+
             if (!$response = $this->getResponse($product)) {
                 continue;
             }
@@ -42,17 +44,16 @@ class ProductService
             if (!$selector->count()) {
                 $this->logger->error(
                     sprintf(
-                        'Selector not found for "%s" product (%s)',
+                        'Selector not found for product "%s" (%s)',
                         $product['title'],
-                        $file->getFilename()
+                        $product['url']
                     )
                 );
 
                 continue;
             }
 
-            $formattedPrice = $selector->text();
-
+            $formattedPrice = trim($selector->text());
             $this->dispatcher->dispatch(new ProductParsedEvent($product, $formattedPrice));
 
             $price = (int) str_replace(',', '', $selector->text());
@@ -60,18 +61,17 @@ class ProductService
             $this->checkProductPrice($product, $price, $index, $formattedPrice);
         }
 
-        $this->updateDataProducts();
+        $this->updateDataProducts($filePath);
     }
 
-    private function getDataProducts(): array
+    private function getDataProducts(string $filePath): array
     {
-        /** @var string $jsonContent */
-        $jsonContent = file_get_contents($this->filePath);
+        $jsonContent = file_get_contents($filePath);
 
         try {
             return json_decode($jsonContent, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
-            throw new RuntimeException("Failure during decoding of {$this->filePath}.json file: {$e}");
+            throw new RuntimeException("Failure during decoding of {$filePath}.json file: {$e}");
         }
     }
 
@@ -79,22 +79,22 @@ class ProductService
     {
         try {
             $response = $this->httpClient->request('GET', $product['url']);
+
+            if (($statusCode = $response->getStatusCode()) !== Response::HTTP_OK) {
+                $this->logger->error(sprintf(
+                    'Unable to check product "%s" (%s) : status code %d.',
+                    $product['title'],
+                    $product['url'],
+                    $statusCode
+                ));
+
+                return null;
+            }
+
+            return $response;
         } catch (TransportExceptionInterface $e) {
             throw new RuntimeException("Failure during the request {$product['url']}: {$e}");
         }
-
-        if (($statusCode = $response->getStatusCode()) !== 200) {
-            $this->logger->error(sprintf(
-                'Unable to check product "%s" (%s) : status code %d.',
-                $product['title'],
-                $product['url'],
-                $statusCode
-            ));
-
-            return null;
-        }
-
-        return $response;
     }
 
     private function checkProductPrice(array $product, int $price, int $index, string $formattedPrice): void
@@ -112,12 +112,12 @@ class ProductService
         $this->dataProducts['products'][$productIndex]['alertedPrice'] = $price;
     }
 
-    private function updateDataProducts(): void
+    private function updateDataProducts(string $filePath): void
     {
         try {
-            file_put_contents($this->filePath, json_encode($this->dataProducts, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
+            file_put_contents($filePath, json_encode($this->dataProducts, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
         } catch (\JsonException $e) {
-            throw new RuntimeException("Failure during encoding of {$this->filePath}.json file: {$e}");
+            throw new RuntimeException("Failure during encoding of {$filePath}.json file: {$e}");
         }
     }
 }

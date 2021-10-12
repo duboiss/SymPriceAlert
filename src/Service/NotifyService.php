@@ -19,12 +19,13 @@ class NotifyService
     {
         $notification = (new Notification('Price alert'))
             ->importance(Notification::IMPORTANCE_HIGH)
-            ->subject(sprintf('Price alert / %s %s', $product['title'], $formattedPrice))
+            ->subject(sprintf('Price alert / %s - %s', $product['title'], $formattedPrice))
             ->content(sprintf(
-                'Price alert for %s product : %s (%s€ desired)',
+                'Price alert for "%s" product : %s (%s€ desired) at url %s',
                 $product['title'],
                 $formattedPrice,
-                $product['desiredPrice']
+                $product['desiredPrice'],
+                $product['url']
             ))
         ;
 
