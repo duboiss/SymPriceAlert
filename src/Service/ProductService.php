@@ -19,7 +19,7 @@ class ProductService
 {
     private ?array $dataProducts = null;
 
-    public function __construct(private HttpClientInterface $httpClient, private LoggerInterface $logger, private NotifyService $notifyService, private EventDispatcherInterface $dispatcher)
+    public function __construct(private readonly HttpClientInterface $httpClient, private readonly LoggerInterface $logger, private readonly NotifyService $notifyService, private readonly EventDispatcherInterface $dispatcher)
     {
     }
 

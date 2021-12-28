@@ -6,7 +6,7 @@ Be notified when the desired price is reached.
 Made in France.
 
 ## Requirements and installation
-You need PHP 8.0 (or higher) with some [extensions enabled](https://symfony.com/doc/5.2/setup.html#technical-requirements) and composer.
+You need PHP 8.1 with some [extensions enabled](https://symfony.com/doc/5.2/setup.html#technical-requirements) and composer.
 ```sh
 git clone git@github.com:duboiss/SymPriceAlert.git
 cd SymPriceAlert

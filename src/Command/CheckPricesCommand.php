@@ -18,7 +18,7 @@ class CheckPricesCommand extends Command
 {
     private const PRODUCTS_PATH = __DIR__ . '/../DataProducts';
 
-    public function __construct(private ProductService $productService, private EventDispatcherInterface $dispatcher)
+    public function __construct(private readonly ProductService $productService, private readonly EventDispatcherInterface $dispatcher)
     {
         parent::__construct();
     }
