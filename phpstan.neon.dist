@@ -1,0 +1,6 @@
+parameters:
+  level: max
+  paths:
+    - '%currentWorkingDirectory%/src'
+  checkMissingIterableValueType: false
+  checkExplicitMixed: false
