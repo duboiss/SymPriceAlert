@@ -23,5 +23,8 @@ jobs:
             - name: Check the Symfony console
               run: bin/console -V
 
-            - name: Quality tools checks
+            - name: Quality tools - phpcsfixer
               run: make phpcsfixer-audit
+
+            - name: Quality tools - phpstan
+              run: make phpstan

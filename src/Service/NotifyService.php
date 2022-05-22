@@ -11,7 +11,7 @@ use Symfony\Component\Notifier\Recipient\Recipient;
 
 class NotifyService
 {
-    public function __construct(private readonly LoggerInterface $logger, private readonly NotifierInterface $notifier, private $mailerTo, private $phoneNumber)
+    public function __construct(private readonly LoggerInterface $logger, private readonly NotifierInterface $notifier, private readonly string $mailerTo, private readonly string $phoneNumber)
     {
     }
 

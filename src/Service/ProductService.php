@@ -66,12 +66,14 @@ class ProductService
 
     private function getDataProducts(string $filePath): array
     {
-        $jsonContent = file_get_contents($filePath);
+        if (!$jsonContent = file_get_contents($filePath)) {
+            throw new RuntimeException("Failed to read {$filePath}.json file.");
+        }
 
         try {
             return json_decode($jsonContent, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
-            throw new RuntimeException("Failure during decoding of {$filePath}.json file: {$e}");
+            throw new RuntimeException("Failed to decode {$filePath}.json file: {$e}");
         }
     }
 
